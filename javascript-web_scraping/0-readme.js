@@ -1,10 +1,10 @@
 #!/usr/bin/node
-
+// a script that writes a string to a file.
 const fs = require('fs');
-
-fs.readFile(process.argv[2], 'utf-8', (err, data) => {
-  if (err) {
-    console.log(err);
+const fileName = process.argv[2];
+fs.readFile(fileName, 'utf8', (error, data) => {
+  if (error) {
+    console.error(error);
   } else {
     console.log(data);
   }
