@@ -1,1 +1,0 @@
-readme for javascript-web_scraping
