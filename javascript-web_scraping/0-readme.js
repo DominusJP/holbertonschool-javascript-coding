@@ -1,3 +1,4 @@
+#!/usr/bin/node
 const fs = require('fs');
 
 // Check if the file path argument is provided
