@@ -2,13 +2,17 @@
 
 const request = require('request');
 const url = process.argv[2];
+const characterId = 18;
 
-request.get(url, '', (err, res, body) => {
-  if (err) {
-    console.error(err);
+request.get(url, (error, response, body) => {
+  if (error) {
+    console.error(error);
   }
-
-  const films = JSON.parse(body).results;
-  const amount = films.filter(film => film.characters.includes('https://swapi-api.hbtn.io/api/people/18/'));
-  console.log(amount.length);
+  const results = JSON.parse(body).results;
+  const characters = results.map(result => result.characters);
+  const listOfCharacter = characters.flat();
+  const countWedge = listOfCharacter.filter(characterUrl => {
+    return characterUrl.includes(`/${characterId}/`);
+  });
+  console.log(countWedge.length);
 });
