@@ -1,23 +1,43 @@
 #!/usr/bin/node
 
 const request = require('request');
-const url = process.argv[2];
 
-request(url, (err, res, body) => {
-  if (err) {
-    console.log(err);
+const apiUrl = process.argv[2];
+
+if (!apiUrl) {
+  console.error('Please provide the API URL as the first argument');
+  process.exit(1);
+}
+
+request(apiUrl, (error, response, body) => {
+  if (error) {
+    console.error('Error:', error);
     return;
   }
-  const completedTasks = {};
-  const tasks = JSON.parse(body);
-  for (const task of tasks) {
-    if (task.completed === true) {
-      if (completedTasks[task.userId] === undefined) {
-        completedTasks[task.userId] = 1;
-      } else {
-        completedTasks[task.userId] += 1;
-      }
-    }
+
+  if (response.statusCode !== 200) {
+    console.error('Failed to fetch data. Status code:', response.statusCode);
+    return;
   }
+
+  let tasks;
+  try {
+    tasks = JSON.parse(body);
+  } catch (e) {
+    console.error('Failed to parse response body:', e);
+    return;
+  }
+
+  const completedTasks = {};
+
+  tasks.forEach((task) => {
+    if (task.completed) {
+      if (!completedTasks[task.userId]) {
+        completedTasks[task.userId] = 0;
+      }
+      completedTasks[task.userId]++;
+    }
+  });
+
   console.log(completedTasks);
 });
